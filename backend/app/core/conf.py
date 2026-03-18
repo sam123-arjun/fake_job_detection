@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     MONGODB_URL: str = os.getenv("MONGODB_URL", "mongodb://admin:password@localhost:27017")
     DB_NAME: str = "fakejobdb"
     
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    BACKEND_CORS_ORIGINS: List[str] = ["*"]
 
     class Config:
         case_sensitive = True

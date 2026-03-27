@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, ShieldCheck, Home, LogIn, UserPlus, LayoutDashboard, LogOut } from 'lucide-react';
+import { Activity, ShieldCheck, Home, LogIn, UserPlus, LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
@@ -52,7 +52,7 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden lg:flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         {navLinks.map((link) => {
                             const Icon = link.icon;
@@ -92,14 +92,10 @@ const Navbar = () => {
 
                 {/* Mobile Menu Toggle */}
                 <button 
-                    className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+                    className="md:hidden p-2 text-gray-400 hover:text-white transition-colors" // Changed lg:hidden to md:hidden
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    {isOpen ? <LogOut className="w-8 h-8 rotate-90" /> : <div className="space-y-1.5">
-                        <div className={`w-8 h-0.5 bg-current transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                        <div className={`w-8 h-0.5 bg-current transition-all ${isOpen ? 'opacity-0' : ''}`} />
-                        <div className={`w-8 h-0.5 bg-current transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-                    </div>}
+                    {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />} {/* Changed to X and Menu icons */}
                 </button>
             </div>
 
@@ -110,7 +106,7 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="lg:hidden bg-slate-900/95 backdrop-blur-xl border-b border-white/10 overflow-hidden"
+                        className="md:hidden bg-slate-900/95 backdrop-blur-xl border-b border-white/10 overflow-hidden" // Changed lg:hidden to md:hidden
                     >
                         <div className="container mx-auto px-6 py-8 flex flex-col gap-4">
                             {navLinks.map((link) => {

@@ -1,92 +1,100 @@
-# Fake Job Post Detection System
+# 🛡️ Fake Job Post Detection System
 
-A full-stack web application that uses a Bi-LSTM deep learning model to detect whether a job posting is Real or Fake.
+[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb)](https://www.mongodb.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+An advanced, full-stack web application designed to identify fraudulent job postings using state-of-the-art **Bi-LSTM** (Bidirectional Long Short-Term Memory) neural networks. This system helps protect job seekers by analyzing job descriptions with high accuracy and confidence.
 
-- **AI-Powered Detection**: Real-time analysis of job descriptions.
-- **Glassmorphism UI**: Modern, responsive React frontend with TailwindCSS.
-- **Secure Authentication**: JWT-based login and registration.
-- **History Tracking**: Saves all predictions for user review.
-- **Role-Based Access**: User and Admin capabilities.
-- **Production Ready**: Dockerized backend and frontend with MongoDB.
+---
 
-## Tech Stack
+## ✨ Key Features
 
-- **Backend**: FastAPI, Python, MongoDB (Beanie/Motor), TensorFlow/Keras.
-- **Frontend**: React (Vite), TailwindCSS, Framer Motion.
-- **Database**: MongoDB.
-- **Deployment**: Docker Compose.
+- **🧠 AI-Powered Analysis**: Real-time detection using deep learning models trained on massive datasets.
+- **📱 Fully Responsive UI**: Premium glassmorphism design that works seamlessly on Desktop, Tablet, and Mobile.
+- **🔒 Secure Architecture**: JWT-based authentication with protected routes and encrypted password hashing.
+- **📊 Prediction History**: Track and review previous detection results at a glance.
+- **⚡ Performance-Driven**: Built with **FastAPI** for high-concurrency and **Vite** for lightning-fast frontend delivery.
 
-## Prerequisites
+---
 
-- Docker & Docker Compose
-- Python 3.10+ (for local dev)
-- Node.js 18+ (for local dev)
-
-## Quick Start (Docker)
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repo-url>
-    cd fake-job-detection
-    ```
-
-2.  **Add ML Model:**
-    Place your trained model files in `backend/ml/`:
-    - `model.h5`
-    - `tokenizer.pickle`
-    *(The system will use a mock predictor if files are missing)*
-
-3.  **Run with Docker Compose:**
-    ```bash
-    docker-compose up --build
-    ```
-
-4.  **Access the App:**
-    - Frontend: [ ](http://localhost:5173) (or mapped port)
-    - Backend API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-## Local Development Setup
-
-### Backend
-
-**Prerequisite:** Ensure you have a MongoDB instance running (locally or cloud). Update `.env` or `app/core/conf.py` with your `MONGODB_URL`.
-
-```bash
-cd backend
-python -m venv venv
-# Windows:
-.\venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
-
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
+## 🛠️ Tech Stack
 
 ### Frontend
+- **Framework**: React 18 (Vite)
+- **Styling**: TailwindCSS & Framer Motion
+- **Icons**: Lucide React
+- **Client**: Axios with persistent auth interceptors
 
+### Backend
+- **Framework**: FastAPI (Python 3.10+)
+- **Database**: MongoDB (Beanie ODM & Motor)
+- **Machine Learning**: TensorFlow CPU, Pandas, NumPy
+- **Security**: Python-jose (JWT), Passlib (Bcrypt)
+
+---
+
+## 🚀 Deployment
+
+The project is structured for easy deployment using **Docker** and modern hosting providers.
+
+- **Frontend**: Optimized for [Vercel](https://vercel.com) or [Netlify](https://netlify.com).
+- **Backend**: Containerized and ready for [Render](https://render.com) or [Railway](https://railway.app).
+- **Database**: Recommended to use [MongoDB Atlas](https://www.mongodb.com/atlas) cluster for production.
+
+---
+
+## 🔧 Installation & Setup
+
+### 1. Prerequisites
+- Docker & Docker Compose
+- Node.js 18+ & Python 3.10+ (for local development)
+
+### 2. Local Environment Setup
+
+#### **Clone the Project**
 ```bash
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/your-username/fake-job-detection.git
+cd fake-job-detection
 ```
 
-## API Usage
+#### **Backend Setup**
+1. Add your ML model files to `backend/ml/` (`model.h5` and `tokenizer.pickle`).
+2. Create `backend/.env` based on `backend/.env.example`.
+3. Start the server:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+   ```
 
-**POST** `/api/v1/predict/`
-```json
-{
-  "job_description": "We are looking for a data scientist..."
-}
+#### **Frontend Setup**
+1. Create `frontend/.env.production` with your backend URL.
+2. Install and run:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+---
+
+## 🐳 Docker Deployment
+
+Run the entire stack (Frontend, Backend, and MongoDB) in one command:
+```bash
+docker-compose up --build
 ```
 
-**Response:**
-```json
-{
-  "prediction": "Real",
-  "confidence": 0.98,
-  "created_at": "2024-02-14T12:00:00Z"
-}
-```
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Authors
+
+- **Sameer** - *Initial Work & Architecture*

@@ -46,22 +46,22 @@ const Home = () => {
                     </span>
                 </motion.div>
 
-                <motion.h1 variants={itemVariants} className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-tight">
+                <motion.h1 variants={itemVariants} className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-tight">
                     Detect <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-glow">Fake Jobs</span>
                     <br /> With Precision
                 </motion.h1>
 
-                <motion.p variants={itemVariants} className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+                <motion.p variants={itemVariants} className="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed font-light px-4">
                     Protect your career with our state-of-the-art Bi-LSTM neural network.
                     Analyze job descriptions in real-time and uncover hidden fraud patterns.
                 </motion.p>
 
-                <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-24">
-                    <Link to={user ? "/dashboard" : "/register"} className="glass-btn group flex items-center gap-3 text-lg">
+                <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-24">
+                    <Link to={user ? "/dashboard" : "/register"} className="w-full sm:w-auto glass-btn group flex items-center justify-center gap-3 text-lg">
                         {user ? "Go to Dashboard" : "Start Detection Free"}
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </Link>
-                    <Link to={user ? "/dashboard" : "/login"} className="px-8 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-gray-300 hover:text-white font-medium text-lg">
+                    <Link to={user ? "/dashboard" : "/login"} className="w-full sm:w-auto px-8 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-gray-300 hover:text-white font-medium text-lg text-center">
                         {user ? "New Analysis" : "View Live Demo"}
                     </Link>
                 </motion.div>
@@ -73,45 +73,45 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-20 px-4"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl mb-20 px-4"
             >
-                <GlassCard className="flex flex-col items-start text-left h-full">
+                <GlassCard className="flex flex-col items-start text-left h-full p-6 md:p-8">
                     <div className="p-3 rounded-lg bg-blue-500/20 mb-4">
                         <BrainCircuit size={32} className="text-blue-400" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white">Bi-LSTM Neural Core</h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">Bi-LSTM Neural Core</h3>
+                    <p className="text-gray-400 leading-relaxed text-sm md:text-base">
                         Our advanced Deep Learning model understands context and semantics, not just keywords, to catch sophisticated scams.
                     </p>
                 </GlassCard>
 
-                <GlassCard className="flex flex-col items-start text-left h-full">
+                <GlassCard className="flex flex-col items-start text-left h-full p-6 md:p-8">
                     <div className="p-3 rounded-lg bg-cyan-500/20 mb-4">
                         <ShieldCheck size={32} className="text-cyan-400" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white">98.5% Accuracy</h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">98.5% Accuracy</h3>
+                    <p className="text-gray-400 leading-relaxed text-sm md:text-base">
                         Trained on a massive dataset of real and fake job postings to ensure you never miss a red flag.
                     </p>
                 </GlassCard>
 
-                <GlassCard className="flex flex-col items-start text-left h-full">
+                <GlassCard className="flex flex-col items-start text-left h-full p-6 md:p-8">
                     <div className="p-3 rounded-lg bg-purple-500/20 mb-4">
                         <Lock size={32} className="text-purple-400" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white">Private & Secure</h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">Private & Secure</h3>
+                    <p className="text-gray-400 leading-relaxed text-sm md:text-base">
                         Your data is processed anonymously and incorrectly. Just print safe results. Zero data retention policy.
                     </p>
                 </GlassCard>
             </motion.div>
 
             {/* Stats/Social Proof (Visual Filler) */}
-            <div className="w-full max-w-4xl border-t border-white/10 pt-10 mb-20 flex justify-between items-center text-gray-500 text-sm font-mono uppercase tracking-widest">
+            <div className="w-full max-w-4xl border-t border-white/10 pt-10 mb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-gray-500 text-xs md:text-sm font-mono uppercase tracking-widest text-center px-6">
                 <span>Processed 1M+ Jobs</span>
-                <span>•</span>
+                <span className="hidden md:block">•</span>
                 <span>Real-time Analysis</span>
-                <span>•</span>
+                <span className="hidden md:block">•</span>
                 <span>Global Coverage</span>
             </div>
         </div>

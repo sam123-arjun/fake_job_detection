@@ -12,7 +12,7 @@ function App() {
         <div className="relative min-h-screen">
             {/* <ThreeBackground /> */}
             <Navbar />
-            <div className="pt-24 px-4 container mx-auto">
+            <div className="pt-24 px-4 container mx-auto pb-12">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />

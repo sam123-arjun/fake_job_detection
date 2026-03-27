@@ -25,8 +25,8 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
-            <GlassCard className="w-full max-w-md">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 pt-32 pb-12">
+            <GlassCard className="w-full max-w-md p-2 sm:p-4">
                 <h2 className="text-3xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-purple-300">Create Account</h2>
                 {error && <p className="text-red-400 text-center mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-4">

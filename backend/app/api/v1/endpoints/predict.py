@@ -17,37 +17,44 @@ async def create_prediction(
     """
     Predict if a job post is real or fake.
     """
-    # Prediction logic
-    result, confidence, conf_level, explanation = predict_job_post(
-        prediction_in.job_description,
-        prediction_in.job_title,
-        prediction_in.requirements
-    )
+    try:
+        # Prediction logic
+        result, confidence, conf_level, explanation = predict_job_post(
+            prediction_in.job_description,
+            prediction_in.job_title,
+            prediction_in.requirements
+        )
 
-    # Save to database
-    prediction = Prediction(
-        user=current_user,
-        job_description=prediction_in.job_description,
-        job_title=prediction_in.job_title,
-        requirements=prediction_in.requirements,
-        prediction_result=result,
-        confidence_score=confidence,
-        confidence_level=conf_level,
-        explanation=explanation
-    )
-    await prediction.insert()
+        # Save to database
+        prediction = Prediction(
+            user=current_user,
+            job_description=prediction_in.job_description,
+            job_title=prediction_in.job_title,
+            requirements=prediction_in.requirements,
+            prediction_result=result,
+            confidence_score=confidence,
+            confidence_level=conf_level,
+            explanation=explanation
+        )
+        await prediction.insert()
 
-    return PredictionResponse(
-        id=str(prediction.id),
-        job_description=prediction.job_description,
-        job_title=prediction.job_title,
-        requirements=prediction.requirements,
-        prediction_result=prediction.prediction_result,
-        confidence_score=prediction.confidence_score,
-        confidence_level=prediction.confidence_level,
-        explanation=prediction.explanation,
-        created_at=prediction.created_at
-    )
+        return PredictionResponse(
+            id=str(prediction.id),
+            job_description=prediction.job_description,
+            job_title=prediction.job_title,
+            requirements=prediction.requirements,
+            prediction_result=prediction.prediction_result,
+            confidence_score=prediction.confidence_score,
+            confidence_level=prediction.confidence_level,
+            explanation=prediction.explanation,
+            created_at=prediction.created_at
+        )
+    except Exception as e:
+        print(f"ERROR_DURING_PREDICTION: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Prediction failed: {str(e)}"
+        )
 
 @router.get("/history", response_model=List[PredictionResponse])
 async def get_prediction_history(

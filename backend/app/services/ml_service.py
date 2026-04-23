@@ -161,7 +161,11 @@ def predict_job_post(description: str, title: str = "", requirements: str = ""):
     if len(words_set.intersection(common_job_words)) == 0 and word_count < 40:
         return "Invalid", 0.0, "LOW", ["The text does not appear to contain standard job-related vocabulary.", "Please ensure you have pasted a real job posting format."]
 
-    if model and tokenizer:
+    # Force use of heuristic fallback on resource-constrained environments (Render Free Tier)
+    # This prevents 500 Internal Server Errors caused by TensorFlow OOM crashes.
+    use_ml_model = False 
+
+    if use_ml_model and model and tokenizer:
         sequences = tokenizer.texts_to_sequences([cleaned_input])
         data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
         prediction = model.predict(data)

@@ -1,0 +1,4 @@
+Line 0: ﻿backend-1  | 2026-04-04 05:47:21.669044: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Line 1: backend-1  | 2026-04-04 05:47:22.103873: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+Line 9: backend-1  | CRITICAL ERROR: Failed to load ML components: Error when deserializing class 'InputLayer' using config={'batch_shape': [None, 200], 'dtype': 'float32', 'sparse': False, 'ragged': False, 'name': 'input_layer'}.
+Line 11: backend-1  | Exception encountered: Unrecognized keyword arguments: ['batch_shape']

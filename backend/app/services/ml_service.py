@@ -161,79 +161,80 @@ def predict_job_post(description: str, title: str = "", requirements: str = ""):
     if len(words_set.intersection(common_job_words)) == 0 and word_count < 40:
         return "Invalid", 0.0, "LOW", ["The text does not appear to contain standard job-related vocabulary.", "Please ensure you have pasted a real job posting format."]
 
-    # Force use of heuristic fallback on resource-constrained environments (Render Free Tier)
-    # This prevents 500 Internal Server Errors caused by TensorFlow OOM crashes.
-    use_ml_model = False 
+    # Logic: Use ML model if it's loaded, otherwise use smart heuristic fallback
+    if model and tokenizer:
+        try:
+            sequences = tokenizer.texts_to_sequences([cleaned_input])
+            data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
+            prediction = model.predict(data)
+            score = float(prediction[0][0])
+            
+            # Sigmoid output logic
+            is_fake = score > 0.5
+            confidence = score if is_fake else 1 - score
+            
+            # Check for semantic hard overrides from findings
+            has_major_mismatch = len(findings["mismatches"]) > 0
+            has_suspicious_flags = len(findings["red_flags"]) > 0
 
-    if use_ml_model and model and tokenizer:
-        sequences = tokenizer.texts_to_sequences([cleaned_input])
-        data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
-        prediction = model.predict(data)
-        score = float(prediction[0][0])
-        
-        # Sigmoid output logic
-        is_fake = score > 0.5
-        confidence = score if is_fake else 1 - score
-        
-        # Check for semantic hard overrides
-        has_major_mismatch = len(findings["mismatches"]) > 0
-        has_suspicious_flags = len(findings["red_flags"]) > 0
+            if has_major_mismatch or has_suspicious_flags:
+                is_fake = True
+                confidence = max(confidence, 0.90)
 
-        if has_major_mismatch or has_suspicious_flags:
-            is_fake = True
-            confidence = max(confidence, 0.90)
-
-        final_result = "Fake" if is_fake else "Real"
-        
-        if final_result == "Fake":
-            reasons.extend(findings["mismatches"])
-            reasons.extend(findings["red_flags"])
-            if score > 0.7:
-                reasons.append(f"Neural Network Analysis: Text embeddings strongly match structural patterns of historical scam listings (Score: {score:.2f}).")
-            elif not reasons:
-                reasons.append("Neural Network Analysis: The vocabulary and phrasing statistically align with documented fraudulent postings.")
-        else:
-            reasons.extend(findings["green_flags"])
-            if score < 0.2:
-                reasons.append("Neural Network Analysis: Text embeddings show exceptionally high correlation with verified authentic job postings.")
-            if not reasons:
-                reasons.append("Analysis concluded the posting contains standard professional vocabulary with no high-risk markers.")
-
-        if confidence > 0.85:
-            conf_level = "HIGH"
-        elif confidence > 0.65:
-            conf_level = "MEDIUM"
-        else:
-            conf_level = "LOW"
-
-        return final_result, confidence, conf_level, reasons
-    else:
-        # SMART HEURISTIC FALLBACK (System remains operational even if ML model has version errors)
-        mismatch_count = len(findings["mismatches"])
-        red_flag_count = len(findings["red_flags"])
-        green_flag_count = len(findings["green_flags"])
-        
-        # Weighted scoring: Red flags and mismatches weigh much more than green flags
-        heuristic_score = (mismatch_count * 0.4) + (red_flag_count * 0.5) - (green_flag_count * 0.2)
-        
-        # Decision logic
-        is_fake = heuristic_score > 0.3
-        final_result = "Fake" if is_fake else "Real"
-        
-        # Narrative construction
-        reasons.append("Note: Result based on enhanced heuristic analysis (ML Engine is currently syncing).")
-        
-        if is_fake:
-            reasons.extend(findings["mismatches"])
-            reasons.extend(findings["red_flags"])
-            if not (findings["mismatches"] or findings["red_flags"]):
-                reasons.append("Detection based on absence of standard professional indicators and unusual formatting.")
-        else:
-            reasons.extend(findings["green_flags"])
-            if not findings["green_flags"]:
-                reasons.append("Job posting appears to follow standard professional guidelines.")
+            final_result = "Fake" if is_fake else "Real"
+            
+            if final_result == "Fake":
+                reasons.extend(findings["mismatches"])
+                reasons.extend(findings["red_flags"])
+                if score > 0.7:
+                    reasons.append(f"Neural Network Analysis: Text embeddings strongly match structural patterns of historical scam listings (Score: {score:.2f}).")
+                elif not reasons:
+                    reasons.append("Neural Network Analysis: The vocabulary and phrasing statistically align with documented fraudulent postings.")
             else:
-                reasons.append("Verified professional markers (benefits, corporate requirements) detected.")
+                reasons.extend(findings["green_flags"])
+                if score < 0.2:
+                    reasons.append("Neural Network Analysis: Text embeddings show exceptionally high correlation with verified authentic job postings.")
+                if not reasons:
+                    reasons.append("Analysis concluded the posting contains standard professional vocabulary with no high-risk markers.")
 
-        confidence = min(0.85, 0.5 + abs(heuristic_score))
-        return final_result, confidence, "MEDIUM", reasons
+            if confidence > 0.85:
+                conf_level = "HIGH"
+            elif confidence > 0.65:
+                conf_level = "MEDIUM"
+            else:
+                conf_level = "LOW"
+
+            return final_result, confidence, conf_level, reasons
+        except Exception as e:
+            print(f"ERROR: ML Inference failed, falling back to heuristic: {e}")
+            # Fall through to heuristic
+    
+    # SMART HEURISTIC FALLBACK (System remains operational even if ML model has version errors or is missing)
+    mismatch_count = len(findings["mismatches"])
+    red_flag_count = len(findings["red_flags"])
+    green_flag_count = len(findings["green_flags"])
+    
+    # Weighted scoring: Red flags and mismatches weigh much more than green flags
+    heuristic_score = (mismatch_count * 0.4) + (red_flag_count * 0.5) - (green_flag_count * 0.2)
+    
+    # Decision logic
+    is_fake = heuristic_score > 0.3
+    final_result = "Fake" if is_fake else "Real"
+    
+    # Narrative construction
+    reasons.append("Note: Neural Engine is currently syncing. Result based on enhanced heuristic analysis.")
+    
+    if is_fake:
+        reasons.extend(findings["mismatches"])
+        reasons.extend(findings["red_flags"])
+        if not (findings["mismatches"] or findings["red_flags"]):
+            reasons.append("Detection based on absence of standard professional indicators and unusual formatting.")
+    else:
+        reasons.extend(findings["green_flags"])
+        if not findings["green_flags"]:
+            reasons.append("Job posting appears to follow standard professional guidelines.")
+        else:
+            reasons.append("Verified professional markers (benefits, corporate requirements) detected.")
+
+    confidence = min(0.85, 0.5 + abs(heuristic_score))
+    return final_result, confidence, "MEDIUM", reasons

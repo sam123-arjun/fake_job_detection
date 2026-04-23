@@ -1,0 +1,3 @@
+backend-1  | CRITICAL ERROR: Failed to load ML components: Error when deserializing class 'InputLayer' using config={'batch_shape': [None, 200], 'dtype': 'float32', 'sparse': False, 'ragged': False, 'name': 'input_layer'}.
+backend-1  | Exception encountered: Unrecognized keyword arguments: ['batch_shape']
+backend-1  | ERROR: ML prediction called but model is not loaded.

@@ -13,6 +13,7 @@ const Dashboard = () => {
     const [requirements, setRequirements] = useState('');
     const [prediction, setPrediction] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
         if (!jobDescription.trim()) return;
         setLoading(true);
         setPrediction(null);
+        setError(null);
         try {
             const { data } = await client.post('/predict/', { 
                 job_description: jobDescription,
@@ -40,8 +42,9 @@ const Dashboard = () => {
             });
             setPrediction(data);
             await fetchHistory(); // Refresh history
-        } catch (error) {
-            console.error("Prediction failed");
+        } catch (err) {
+            console.error("Prediction failed:", err);
+            setError(err.response?.data?.detail || "Connection lost. Please check if the backend is running.");
         }
         setLoading(false);
     };
@@ -111,6 +114,23 @@ const Dashboard = () => {
                     </GlassCard>
 
                     <AnimatePresence>
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-4 mb-6"
+                            >
+                                <ShieldAlert className="shrink-0" size={24} />
+                                <div className="text-sm font-medium">{error}</div>
+                                <button 
+                                    onClick={() => setError(null)}
+                                    className="ml-auto text-xs font-bold uppercase tracking-widest hover:text-white transition"
+                                >
+                                    Dismiss
+                                </button>
+                            </motion.div>
+                        )}
+
                         {prediction && (
                             <GlassCard className={`p-6 md:p-8 border-l-4 ${prediction.prediction_result === 'Fake' ? 'border-red-500' : prediction.prediction_result === 'Unknown' ? 'border-gray-500' : prediction.prediction_result === 'Invalid' ? 'border-purple-500' : 'border-green-500'}`}>
                                 <motion.div
